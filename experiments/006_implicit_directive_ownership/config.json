@@ -1,0 +1,62 @@
+{
+  "experiment_id": "006_implicit_directive_ownership",
+  "designation": "exploratory_implicit_scope_routing",
+  "proposed_run_id": "006-implicit-ownership-20260823T222737Z",
+  "n_per_cell": 5,
+  "schedule_seed": 2026082306,
+  "canonical_schedule_sha256": "022355750c1fff42f856101d20258baee8e67020d8b56aa11521d9626b28b49d",
+  "prompt_source": "experiments/006_implicit_directive_ownership/prompts.json",
+  "prompt_source_sha256": "63c3011c4c61ac006361a8d880003b766ff47ad1e9fbdbc32b24420aea5870ea",
+  "templates": [
+    "CONFLICT_DESCRIBED",
+    "CONFLICT_QUOTED",
+    "AGREEMENT_DESCRIBED",
+    "AGREEMENT_QUOTED"
+  ],
+  "directions": ["active_first", "active_second"],
+  "directive_orders": ["ACTIVE_FIRST", "SECONDARY_FIRST"],
+  "candidate_pairs": [
+    {"pair_id": "pair_0", "first": "KEMAR", "second": "DOVIC"},
+    {"pair_id": "pair_1", "first": "LUPEN", "second": "SOTAR"}
+  ],
+  "historical_reference": {
+    "experiment_id": "004_directive_ownership_conflict",
+    "run_id": "004-ownership-conflict-20260823T203644Z",
+    "source": "experiments/004_directive_ownership_conflict/RESULTS.md",
+    "source_sha256": "6b0954e9bfa3c6a9e5505437d9eb05e5d150735f4e49eaba68ffb914d5a3dd0b",
+    "conflict_active_compliant": 160,
+    "conflict_total": 160,
+    "conflict_active_compliance_by_directive_order": {
+      "ACTIVE_FIRST": 1.0,
+      "SECONDARY_FIRST": 1.0
+    }
+  },
+  "models": [
+    {
+      "model_key": "gpt41_20250414",
+      "family": "GPT-4.1",
+      "provider": "openai",
+      "model_id": "gpt-4.1-2025-04-14",
+      "interface": "chat",
+      "request_parameters": {"temperature": 1.0, "max_tokens": 15},
+      "input_rate_per_mtok": 2.0,
+      "output_rate_per_mtok": 8.0
+    },
+    {
+      "model_key": "claude_opus_5",
+      "family": "Claude Opus 5",
+      "provider": "anthropic",
+      "model_id": "claude-opus-5",
+      "interface": "messages",
+      "request_parameters": {
+        "temperature": 1.0,
+        "max_tokens": 15,
+        "thinking": {"type": "disabled"}
+      },
+      "input_rate_per_mtok": 5.0,
+      "output_rate_per_mtok": 25.0
+    }
+  ],
+  "max_attempts": 4,
+  "default_workers": 8
+}

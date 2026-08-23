@@ -1,0 +1,13 @@
+{
+  "message_template": "Persona conditioning:\n{persona_text}\n\n{restriction_text}\n\nTask:\nFreely choose exactly two distinct ordinary English words.\nDo not use an excluded item.\nYour complete response must contain the first word, one vertical bar character (|), and the second word. Use ASCII letters only within each word, with no spaces, explanation, or other text.",
+  "personas": {
+    "BASE": "",
+    "ANALYTIC_PERSONA": "Use a systematic response style: deliberate, precise, orderly, and attentive to distinctions. Let this general style guide how you approach the task.",
+    "IMAGINATIVE_PERSONA": "Use an associative response style: improvisational, imaginative, flexible, and open to connections. Let this general style guide how you approach the task."
+  },
+  "restrictions": {
+    "NO_BLACKLIST": "Lexical restriction: no word is excluded.",
+    "SHAM_BLACKLIST": "Lexical restriction: VORPAX is excluded.",
+    "LANTERN_BLACKLIST": "Lexical restriction: lantern is excluded."
+  }
+}
