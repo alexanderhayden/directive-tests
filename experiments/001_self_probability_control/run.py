@@ -98,6 +98,12 @@ def verify_model_inventory(provider: OllamaProvider, config: dict) -> list[dict]
                 "interface": spec["interface"],
                 "family": spec["family"],
                 "training_stage": spec["training_stage"],
+                "transport": (
+                    "ollama_native_generate_raw"
+                    if spec["interface"] == "completion"
+                    else "ollama_native_chat"
+                ),
+                "raw": True if spec["interface"] == "completion" else None,
             }
         )
     if errors:
@@ -135,6 +141,11 @@ def dry_run_report() -> dict:
     schedule = build_schedule(config)
     model_counts = Counter(row["model_key"] for row in schedule)
     interface_counts = Counter(row["interface"] for row in schedule)
+    transport_counts = Counter(
+        "ollama_native_generate_raw" if row["interface"] == "completion"
+        else "ollama_native_chat"
+        for row in schedule
+    )
     cell_counts = Counter(row["cell_id"] for row in schedule)
     external = [row for row in schedule if row["arm"] == "EXTERNAL_RANDOMIZER"]
     external_counts: dict[str, dict] = {}
@@ -157,6 +168,12 @@ def dry_run_report() -> dict:
                 "requested_model": model["model_tag"],
                 "expected_digest_prefix": model["expected_digest_prefix"],
                 "interface": model["interface"],
+                "transport": (
+                    "ollama_native_generate_raw"
+                    if model["interface"] == "completion"
+                    else "ollama_native_chat"
+                ),
+                "raw": True if model["interface"] == "completion" else None,
                 "inventory_not_queried": True,
             }
             for model in config["models"]
@@ -176,6 +193,7 @@ def dry_run_report() -> dict:
         "cell_counts_unique_values": sorted(set(cell_counts.values())),
         "model_counts": dict(sorted(model_counts.items())),
         "interface_counts": dict(sorted(interface_counts.items())),
+        "transport_counts": dict(sorted(transport_counts.items())),
         "schedule_sha256": schedule_sha256(schedule),
         "unique_prompt_payload_hashes": len(payload_hashes),
         "external_cells": len(external_counts),
@@ -217,9 +235,8 @@ def collect(run_id: str, *, resume: bool) -> None:
     def sampler(trial: dict, payload: object) -> None:
         spec = model_by_key[trial["model_key"]]
         sampling = {
-            "temperature": config["sampling"]["temperature"],
-            "max_tokens": config["sampling"]["max_tokens"],
-            "stop": config["sampling"]["stop"],
+            key: value for key, value in config["sampling"].items()
+            if key != "max_attempts"
         }
         result = provider.sample(
             model=spec["model_tag"], interface=spec["interface"], payload=payload,

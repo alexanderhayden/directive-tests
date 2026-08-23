@@ -25,7 +25,7 @@ Two matched Q4_K_M checkpoint families are fixed:
 | Mistral 7B v0.2 | base | `mistral:7b-text-v0.2-q4_K_M` | `33518cc91a4d` | raw completion |
 | Mistral 7B v0.2 | instruction-tuned | `mistral:7b-instruct-v0.2-q4_K_M` | `eb14864c7427` | chat |
 
-The base path uses `/v1/completions` with a flat transcript and no model chat template. The instruction path uses `/v1/chat/completions`. Demonstration and task content are semantically matched; the interface is the intended training-stage-appropriate difference.
+The base path uses native `/api/generate` with `raw=true`, `stream=false`, a flat literal transcript, and no system or template field. The instruction path uses native `/api/chat` with `stream=false` and the checkpoint's normal chat template. Demonstration and task content are semantically matched; the intended interface difference is raw base continuation versus normal instruction-model chat.
 
 The runner must abort before collection if an installed tag or digest does not match the frozen configuration.
 
@@ -95,10 +95,17 @@ Transport failures are retained. A later resume may reattempt the same immutable
 ## 7. Sampling parameters
 
 - temperature: 1.0
+- top-p: 1.0
+- top-k: 40
 - maximum output tokens: 12
+- repeat penalty: 1.0
+- presence penalty: 0.0
+- frequency penalty: 0.0
 - stop: newline
 - maximum transport attempts per logical trial attempt: 4
-- seed: not set
+- seed: not set (`null` in the frozen configuration; Ollama's stochastic `-1` behavior applies)
+
+Both native endpoints receive the same explicit Ollama `options` object, except that the null seed is omitted from the request so generation remains independently stochastic. Inspection of Ollama v0.32.13 and the four installed checkpoint manifests indicates that these values match the initial adapter's effective configuration: its compatibility conversion supplied top-p 1.0, and no checkpoint overrode top-k 40, repeat penalty 1.0, or zero presence/frequency penalties. The common native options are frozen here as a pre-data transport standardization; no outcome-generating call preceded it.
 
 The manifest records parameters actually sent on every record.
 

@@ -30,6 +30,10 @@ class ExperimentDesignTests(unittest.TestCase):
         second = design.build_schedule()
         self.assertEqual(first, second)
         self.assertEqual(design.schedule_sha256(first), design.schedule_sha256(second))
+        self.assertEqual(
+            design.schedule_sha256(first),
+            "777ade6c69ec325465c6f0c4490f4b2844e928c6c8c4e204efffeb1d6934d1d5",
+        )
         self.assertEqual(len(first), 2560)
         self.assertEqual(len({row["trial_id"] for row in first}), 2560)
         cell_counts = Counter(row["cell_id"] for row in first)
@@ -82,6 +86,10 @@ class ExperimentDesignTests(unittest.TestCase):
         self.assertEqual(report["cell_count"], 128)
         self.assertEqual(report["cell_counts_unique_values"], [20])
         self.assertEqual(report["external_cells"], 32)
+        self.assertEqual(report["transport_counts"], {
+            "ollama_native_chat": 1280,
+            "ollama_native_generate_raw": 1280,
+        })
         self.assertTrue(report["manifest_required_fields_present"])
         self.assertEqual(runs_dir.exists(), before)
 
@@ -98,6 +106,12 @@ class ExperimentDesignTests(unittest.TestCase):
         verified = runner.verify_model_inventory(FakeProvider(), config)
         self.assertEqual(len(verified), 4)
         self.assertEqual({row["interface"] for row in verified}, {"chat", "completion"})
+        base = [row for row in verified if row["interface"] == "completion"]
+        instruct = [row for row in verified if row["interface"] == "chat"]
+        self.assertEqual({row["transport"] for row in base}, {"ollama_native_generate_raw"})
+        self.assertEqual({row["raw"] for row in base}, {True})
+        self.assertEqual({row["transport"] for row in instruct}, {"ollama_native_chat"})
+        self.assertEqual({row["raw"] for row in instruct}, {None})
 
 
 if __name__ == "__main__":

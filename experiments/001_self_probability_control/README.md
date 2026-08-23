@@ -19,8 +19,8 @@ Matched Q4_K_M pairs:
 
 | Family | Base | Instruction-tuned |
 |---|---|---|
-| Llama 3.1 8B | raw Ollama completion | Ollama chat |
-| Mistral 7B v0.2 | raw Ollama completion | Ollama chat |
+| Llama 3.1 8B | native generate (`raw=true`) | native chat |
+| Mistral 7B v0.2 | native generate (`raw=true`) | native chat |
 
 Every model receives 2 candidate pairs × 4 non-tie splits × 4 arms × 20 trials = 640 trials. Total 001A schedule: **2,560 trials**.
 

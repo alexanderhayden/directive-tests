@@ -20,6 +20,7 @@ class ProviderResult:
     attempts: int
     attempt_failures: list[dict[str, Any]] = field(default_factory=list)
     failure: str | None = None
+    provider_timestamp: str | int | None = None
 
     def to_record(self) -> dict[str, Any]:
         return asdict(self)

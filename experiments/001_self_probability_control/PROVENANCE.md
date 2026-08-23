@@ -27,6 +27,14 @@ All changes below were made before any model call:
 
 These are scientific design changes, not compatibility refactors. They are recorded here and in the 001A preregistration before data.
 
+## Pre-data local-transport correction
+
+The original repository commit, `d59fb6469df7099485a9f26552f17227f98550c3`, used Ollama's OpenAI-compatible endpoints for both local interfaces. Pre-data review found that the base completion path did not guarantee literal raw, template-free input and that the base and instruction stages passed through different transport/compatibility layers.
+
+Before any outcome-generating call, both stages were standardized on Ollama's native APIs: base checkpoints use `/api/generate` with `raw=true` and `stream=false`, while instruction checkpoints use `/api/chat` with `stream=false` and their normal checkpoint chat templates. Both paths receive one shared explicit sampling configuration through the native Ollama `options` object.
+
+**Zero outcome-generating model calls occurred before this correction.** The original root commit remains in Git history; the correction is recorded in a subsequent pre-data commit without rewriting history.
+
 ## Code provenance
 
 The new harness is a clean refactor of author-owned concepts from Artifact 1:
