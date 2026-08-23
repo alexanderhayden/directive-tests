@@ -93,9 +93,15 @@ def grouped_summaries(records: list[dict], config: dict, field: str) -> dict:
 
 def analyze_records(records: list[dict], schedule: list[dict], config: dict) -> dict:
     successes = successful_records(records, schedule)
-    grouped: dict[tuple[str, str, str, str], list[dict]] = {}
+    grouped: dict[tuple[str, str, str, str, str], list[dict]] = {}
     for record in successes:
-        key = (record["model_key"], record["pair_id"], record["template"], record["direction"])
+        key = (
+            record["model_key"],
+            record["pair_id"],
+            record["template"],
+            record["direction"],
+            record["directive_order"],
+        )
         grouped.setdefault(key, []).append(record)
     cells = []
     lookup = {}
@@ -103,42 +109,177 @@ def analyze_records(records: list[dict], schedule: list[dict], config: dict) -> 
         for pair in config["candidate_pairs"]:
             for template in config["templates"]:
                 for direction in config["directions"]:
-                    key = (model["model_key"], pair["pair_id"], template, direction)
-                    row = {
-                        "model_key": model["model_key"],
-                        "model_id": model["model_id"],
-                        "pair_id": pair["pair_id"],
-                        "first_candidate": pair["first"],
-                        "second_candidate": pair["second"],
-                        "template": template,
-                        "scope_type": "described" if template.endswith("DESCRIBED") else "quoted",
-                        "relationship": "conflict" if template.startswith("CONFLICT_") else "agreement",
-                        "direction": direction,
-                        "active_assignment": "first" if direction == "active_first" else "second",
-                        **routing_metrics(grouped[key], config),
-                    }
-                    cells.append(row)
-                    lookup[key] = row
+                    for directive_order in config["directive_orders"]:
+                        key = (
+                            model["model_key"],
+                            pair["pair_id"],
+                            template,
+                            direction,
+                            directive_order,
+                        )
+                        row = {
+                            "model_key": model["model_key"],
+                            "model_id": model["model_id"],
+                            "pair_id": pair["pair_id"],
+                            "first_candidate": pair["first"],
+                            "second_candidate": pair["second"],
+                            "template": template,
+                            "scope_type": (
+                                "described" if template.endswith("DESCRIBED") else "quoted"
+                            ),
+                            "relationship": (
+                                "conflict" if template.startswith("CONFLICT_") else "agreement"
+                            ),
+                            "direction": direction,
+                            "directive_order": directive_order,
+                            "active_assignment": (
+                                "first" if direction == "active_first" else "second"
+                            ),
+                            **routing_metrics(grouped[key], config),
+                        }
+                        cells.append(row)
+                        lookup[key] = row
 
     reversal = []
     for model in config["models"]:
         for pair in config["candidate_pairs"]:
             for template in config["templates"]:
-                first = lookup[(model["model_key"], pair["pair_id"], template, "active_first")]
-                second = lookup[(model["model_key"], pair["pair_id"], template, "active_second")]
-                reversal.append(
-                    {
-                        "model_key": model["model_key"],
-                        "pair_id": pair["pair_id"],
-                        "template": template,
-                        "active_first_compliance_rate": first["active_directive_compliance_rate"],
-                        "active_second_compliance_rate": second["active_directive_compliance_rate"],
-                        "active_first_minus_active_second": (
-                            first["active_directive_compliance_rate"]
-                            - second["active_directive_compliance_rate"]
-                        ),
-                    }
-                )
+                for directive_order in config["directive_orders"]:
+                    first = lookup[
+                        (
+                            model["model_key"],
+                            pair["pair_id"],
+                            template,
+                            "active_first",
+                            directive_order,
+                        )
+                    ]
+                    second = lookup[
+                        (
+                            model["model_key"],
+                            pair["pair_id"],
+                            template,
+                            "active_second",
+                            directive_order,
+                        )
+                    ]
+                    reversal.append(
+                        {
+                            "model_key": model["model_key"],
+                            "pair_id": pair["pair_id"],
+                            "template": template,
+                            "directive_order": directive_order,
+                            "active_first_compliance_rate": first[
+                                "active_directive_compliance_rate"
+                            ],
+                            "active_second_compliance_rate": second[
+                                "active_directive_compliance_rate"
+                            ],
+                            "active_first_minus_active_second": (
+                                first["active_directive_compliance_rate"]
+                                - second["active_directive_compliance_rate"]
+                            ),
+                        }
+                    )
+
+    order_differences = []
+    for model in config["models"]:
+        for pair in config["candidate_pairs"]:
+            for template in config["templates"]:
+                for direction in config["directions"]:
+                    active_first = lookup[
+                        (
+                            model["model_key"],
+                            pair["pair_id"],
+                            template,
+                            direction,
+                            "ACTIVE_FIRST",
+                        )
+                    ]
+                    secondary_first = lookup[
+                        (
+                            model["model_key"],
+                            pair["pair_id"],
+                            template,
+                            direction,
+                            "SECONDARY_FIRST",
+                        )
+                    ]
+                    order_differences.append(
+                        {
+                            "model_key": model["model_key"],
+                            "pair_id": pair["pair_id"],
+                            "template": template,
+                            "direction": direction,
+                            "ACTIVE_FIRST_active_directive_compliance_rate": active_first[
+                                "active_directive_compliance_rate"
+                            ],
+                            "SECONDARY_FIRST_active_directive_compliance_rate": secondary_first[
+                                "active_directive_compliance_rate"
+                            ],
+                            "active_compliance_ACTIVE_FIRST_minus_SECONDARY_FIRST": (
+                                active_first["active_directive_compliance_rate"]
+                                - secondary_first["active_directive_compliance_rate"]
+                            ),
+                            "ACTIVE_FIRST_secondary_directive_compliance_rate": active_first[
+                                "secondary_directive_compliance_rate"
+                            ],
+                            "SECONDARY_FIRST_secondary_directive_compliance_rate": secondary_first[
+                                "secondary_directive_compliance_rate"
+                            ],
+                            "secondary_compliance_ACTIVE_FIRST_minus_SECONDARY_FIRST": (
+                                active_first["secondary_directive_compliance_rate"]
+                                - secondary_first["secondary_directive_compliance_rate"]
+                            ),
+                            "protocol_failure_rate_ACTIVE_FIRST_minus_SECONDARY_FIRST": (
+                                active_first["protocol_failure_rate"]
+                                - secondary_first["protocol_failure_rate"]
+                            ),
+                        }
+                    )
+
+    pair_differences = []
+    first_pair, second_pair = config["candidate_pairs"]
+    for model in config["models"]:
+        for template in config["templates"]:
+            for direction in config["directions"]:
+                for directive_order in config["directive_orders"]:
+                    pair_0 = lookup[
+                        (
+                            model["model_key"],
+                            first_pair["pair_id"],
+                            template,
+                            direction,
+                            directive_order,
+                        )
+                    ]
+                    pair_1 = lookup[
+                        (
+                            model["model_key"],
+                            second_pair["pair_id"],
+                            template,
+                            direction,
+                            directive_order,
+                        )
+                    ]
+                    pair_differences.append(
+                        {
+                            "model_key": model["model_key"],
+                            "template": template,
+                            "direction": direction,
+                            "directive_order": directive_order,
+                            "pair_0_active_directive_compliance_rate": pair_0[
+                                "active_directive_compliance_rate"
+                            ],
+                            "pair_1_active_directive_compliance_rate": pair_1[
+                                "active_directive_compliance_rate"
+                            ],
+                            "pair_0_minus_pair_1": (
+                                pair_0["active_directive_compliance_rate"]
+                                - pair_1["active_directive_compliance_rate"]
+                            ),
+                        }
+                    )
     conflict_records = [r for r in successes if r["template"].startswith("CONFLICT_")]
     agreement_records = [r for r in successes if r["template"].startswith("AGREEMENT_")]
     return {
@@ -153,11 +294,17 @@ def analyze_records(records: list[dict], schedule: list[dict], config: dict) -> 
         "transport_failure_records": sum(record.get("failure") is not None for record in records),
         "overall_conflict_routing": routing_metrics(conflict_records, config),
         "overall_agreement_controls": routing_metrics(agreement_records, config),
+        "results_by_directive_order": grouped_summaries(
+            successes, config, "directive_order"
+        ),
         "results_by_model": grouped_summaries(successes, config, "model_key"),
         "results_by_pair": grouped_summaries(successes, config, "pair_id"),
         "results_by_template": grouped_summaries(successes, config, "template"),
         "results_by_candidate_reversal": grouped_summaries(successes, config, "direction"),
+        "directive_order_differences": order_differences,
         "candidate_reversal_differences": reversal,
+        "pair_symmetry_differences": pair_differences,
+        "key_feasibility_requirement": "Active-directive routing should not disappear or reverse merely when the competing directive is presented first.",
         "cells": cells,
     }
 

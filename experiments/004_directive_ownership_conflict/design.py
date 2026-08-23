@@ -35,6 +35,11 @@ def load_prompts(config: dict | None = None) -> dict:
     prompts = json.loads(PROMPTS_PATH.read_text())
     if list(prompts["templates"]) != config["templates"]:
         raise ValueError("prompt templates differ from the frozen config")
+    if any(
+        list(prompts["templates"][template]) != config["directive_orders"]
+        for template in config["templates"]
+    ):
+        raise ValueError("prompt directive orders differ from the frozen config")
     return prompts
 
 
@@ -51,16 +56,25 @@ def assignments_for_trial(trial: dict) -> tuple[str, str]:
 
 
 def cell_id(trial: dict) -> str:
-    return f"{trial['model_key']}__{trial['pair_id']}__{trial['template']}__{trial['direction']}"
+    return (
+        f"{trial['model_key']}__{trial['pair_id']}__{trial['template']}__"
+        f"{trial['direction']}__{trial['directive_order']}"
+    )
 
 
 def build_schedule(config: dict | None = None) -> list[dict]:
     config = config or load_config()
     cells = [
-        {"pair_id": pair["pair_id"], "template": template, "direction": direction}
+        {
+            "pair_id": pair["pair_id"],
+            "template": template,
+            "direction": direction,
+            "directive_order": directive_order,
+        }
         for pair in config["candidate_pairs"]
         for template in config["templates"]
         for direction in config["directions"]
+        for directive_order in config["directive_orders"]
     ]
     schedule = shuffled_model_blocks(
         config["models"], cells, repeats=config["n_per_cell"], seed=config["schedule_seed"]
@@ -79,14 +93,14 @@ def build_schedule(config: dict | None = None) -> list[dict]:
 
 def validate_schedule(schedule: list[dict], config: dict | None = None) -> None:
     config = config or load_config()
-    expected = 4 * 2 * 2 * 2 * config["n_per_cell"]
+    expected = 4 * 2 * 2 * 2 * 2 * config["n_per_cell"]
     if len(schedule) != expected:
         raise ValueError(f"schedule has {len(schedule)} rows; expected {expected}")
     if len({row["trial_id"] for row in schedule}) != expected:
         raise ValueError("trial IDs are not unique")
     cell_counts = Counter(row["cell_id"] for row in schedule)
-    if len(cell_counts) != 32 or set(cell_counts.values()) != {10}:
-        raise ValueError("schedule must contain 32 cells with 10 trials each")
+    if len(cell_counts) != 64 or set(cell_counts.values()) != {5}:
+        raise ValueError("schedule must contain 64 cells with 5 trials each")
     if set(Counter(row["model_key"] for row in schedule).values()) != {160}:
         raise ValueError("schedule must contain 160 trials per model")
     if Counter(row["template"] for row in schedule) != Counter(
@@ -97,6 +111,16 @@ def validate_schedule(schedule: list[dict], config: dict | None = None) -> None:
         {direction: 160 for direction in config["directions"]}
     ):
         raise ValueError("candidate reversal balance changed")
+    if Counter(row["directive_order"] for row in schedule) != Counter(
+        {directive_order: 160 for directive_order in config["directive_orders"]}
+    ):
+        raise ValueError("directive-order balance changed")
+    aggregate_counts = Counter(
+        (row["model_key"], row["pair_id"], row["template"], row["direction"])
+        for row in schedule
+    )
+    if len(aggregate_counts) != 32 or set(aggregate_counts.values()) != {10}:
+        raise ValueError("original conditions must retain 10 trials aggregated over order")
     for row in schedule:
         expected_active, expected_secondary = assignments_for_trial(row)
         if (row["active_assignment"], row["secondary_assignment"]) != (
@@ -134,7 +158,7 @@ def build_trial_payload(
     return [
         {
             "role": "user",
-            "content": prompts["templates"][trial["template"]].format(
+            "content": prompts["templates"][trial["template"]][trial["directive_order"]].format(
                 active_candidate=pair[trial["active_assignment"]],
                 secondary_candidate=pair[trial["secondary_assignment"]],
                 first=pair["first"],

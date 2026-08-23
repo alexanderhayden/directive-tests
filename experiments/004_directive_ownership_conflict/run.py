@@ -96,6 +96,9 @@ def dry_run_report() -> dict:
         "calls_by_direction": dict(
             sorted(Counter(row["direction"] for row in schedule).items())
         ),
+        "calls_by_directive_order": dict(
+            sorted(Counter(row["directive_order"] for row in schedule).items())
+        ),
         "calls_by_pair": dict(sorted(Counter(row["pair_id"] for row in schedule).items())),
         "unique_prompt_payloads": len({payload_sha256(payload) for payload in payloads}),
         "models": [

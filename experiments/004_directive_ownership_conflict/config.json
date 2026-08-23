@@ -2,11 +2,11 @@
   "experiment_id": "004_directive_ownership_conflict",
   "designation": "exploratory_construct_feasibility",
   "proposed_run_id": "004-ownership-conflict-20260823T203644Z",
-  "n_per_cell": 10,
+  "n_per_cell": 5,
   "schedule_seed": 2026082304,
-  "canonical_schedule_sha256": "a8f46aab68e74ef3ecccd5a11030b0d2c65cac5899b4b3fd7f949878c20859c6",
+  "canonical_schedule_sha256": "d7645abdedbf2f78e74cd3fa6e5fd7f1b081d5d2ceef59c0543359884a659685",
   "prompt_source": "experiments/004_directive_ownership_conflict/prompts.json",
-  "prompt_source_sha256": "808f822338c4f7304a33b7efce9c7a5625f137ea3cb16c6cbb56e60a9a5163f6",
+  "prompt_source_sha256": "e9711053e66d252c097186021e7dccaf0ef96d558e6f532cd55778f0e873bf2e",
   "templates": [
     "CONFLICT_DESCRIBED",
     "CONFLICT_QUOTED",
@@ -14,6 +14,7 @@
     "AGREEMENT_QUOTED"
   ],
   "directions": ["active_first", "active_second"],
+  "directive_orders": ["ACTIVE_FIRST", "SECONDARY_FIRST"],
   "candidate_pairs": [
     {"pair_id": "pair_0", "first": "KEMAR", "second": "DOVIC"},
     {"pair_id": "pair_1", "first": "LUPEN", "second": "SOTAR"}
