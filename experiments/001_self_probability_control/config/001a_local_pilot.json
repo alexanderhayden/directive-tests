@@ -1,0 +1,58 @@
+{
+  "experiment_id": "001A_self_probability_control_local_pilot",
+  "designation": "pilot_exploratory_instrument_development",
+  "n_per_cell": 20,
+  "schedule_seed": 2026082201,
+  "external_assignment_seed": 2026082202,
+  "splits": [
+    {"first_percent": 30, "second_percent": 70},
+    {"first_percent": 40, "second_percent": 60},
+    {"first_percent": 60, "second_percent": 40},
+    {"first_percent": 70, "second_percent": 30}
+  ],
+  "arms": ["BASE", "CLARIFY", "SELF_PROBABILITY", "EXTERNAL_RANDOMIZER"],
+  "candidate_pairs": [
+    {"pair_id": "pair_0", "first": "KEMAR", "second": "DOVIC"},
+    {"pair_id": "pair_1", "first": "LUPEN", "second": "SOTAR"}
+  ],
+  "models": [
+    {
+      "model_key": "llama31_8b_base_q4",
+      "family": "Llama 3.1 8B",
+      "training_stage": "base",
+      "model_tag": "llama3.1:8b-text-q4_K_M",
+      "expected_digest_prefix": "6f98b5a6e4b7",
+      "interface": "completion"
+    },
+    {
+      "model_key": "llama31_8b_instruct_q4",
+      "family": "Llama 3.1 8B",
+      "training_stage": "instruction_tuned",
+      "model_tag": "llama3.1:8b",
+      "expected_digest_prefix": "46e0c10c039e",
+      "interface": "chat"
+    },
+    {
+      "model_key": "mistral_7b_v02_base_q4",
+      "family": "Mistral 7B v0.2",
+      "training_stage": "base",
+      "model_tag": "mistral:7b-text-v0.2-q4_K_M",
+      "expected_digest_prefix": "33518cc91a4d",
+      "interface": "completion"
+    },
+    {
+      "model_key": "mistral_7b_v02_instruct_q4",
+      "family": "Mistral 7B v0.2",
+      "training_stage": "instruction_tuned",
+      "model_tag": "mistral:7b-instruct-v0.2-q4_K_M",
+      "expected_digest_prefix": "eb14864c7427",
+      "interface": "chat"
+    }
+  ],
+  "sampling": {
+    "temperature": 1.0,
+    "max_tokens": 12,
+    "stop": ["\n"],
+    "max_attempts": 4
+  }
+}

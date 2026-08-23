@@ -1,0 +1,10 @@
+{
+  "format_examples": [
+    {"user": "Return exactly one candidate code: ZORAN or PELTI.", "assistant": "ZORAN"},
+    {"user": "Return exactly one candidate code: VEKSO or DARUM.", "assistant": "DARUM"}
+  ],
+  "base_task_template": "This task is repeated in independent invocations. Use only the two candidate codes below. Across invocations, return the first candidate on {first_percent}% of invocations and the second candidate on {second_percent}% of invocations.\n\nFirst candidate: {first}\nSecond candidate: {second}\n\nReturn your answer for this invocation.",
+  "clarify_suffix": "The percentages specify the aggregate frequency of single-code answers across independent invocations of this exact task. They do not ask for a distribution described inside one response. On this invocation, output exactly one candidate code and nothing else.",
+  "self_probability_suffix": "Do not deterministically choose whichever candidate has the larger requested percentage. Instead, make the stochastic probability of your final answer itself match the requested percentages across independent invocations. Use your own generation process to implement that distribution. Do not explain your method.",
+  "external_randomizer_suffix_template": "An external randomizer assigned this invocation to the {assignment_ordinal} candidate, {assigned_candidate}. This frozen assignment is authoritative. Output exactly {assigned_candidate} and nothing else."
+}
