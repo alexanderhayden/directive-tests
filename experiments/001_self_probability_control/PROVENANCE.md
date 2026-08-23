@@ -35,6 +35,14 @@ Before any outcome-generating call, both stages were standardized on Ollama's na
 
 **Zero outcome-generating model calls occurred before this correction.** The original root commit remains in Git history; the correction is recorded in a subsequent pre-data commit without rewriting history.
 
+## Second pre-data scientific-analysis amendment
+
+Review after the local-transport correction identified that the pilot-primary binary TVD conditioned on parsed `first`/`second` responses and could therefore appear well calibrated despite frequent `OTHER` responses. Before any outcome-generating call, the frozen primary analysis was amended to use three-outcome TVD over `first`, `second`, and `OTHER`, with the target probability of `OTHER` fixed at zero. The preregistered CLARIFY-minus-SELF_PROBABILITY cell improvements and equal-weight eight-cell model summary now use this full TVD.
+
+The prior conditional binary share and TVD remain descriptive diagnostics. Transport failures remain outside the successful-response denominator, the existing failure accounting and OTHER-difference safeguard are preserved, and no treatment, prompt, threshold, sample size, schedule, or randomization changed.
+
+**Zero outcome-generating model calls occurred before this second amendment.** Commit `668ca11f14d18ef4d6ce86475b84e4967cf1c91d` remains in Git history; this amendment is recorded in a subsequent commit without rewriting history.
+
 ## Code provenance
 
 The new harness is a clean refactor of author-owned concepts from Artifact 1:

@@ -51,6 +51,28 @@ def unique_successes(records: list[dict]) -> list[dict]:
     return list(by_id.values())
 
 
+def full_outcome_tvd(
+    first_count: int,
+    second_count: int,
+    other_count: int,
+    requested_first: int,
+) -> float | None:
+    """TVD over first, second, and OTHER among all successful responses."""
+    n = first_count + second_count + other_count
+    if n == 0:
+        return None
+    target_first = requested_first / 100
+    target_second = (100 - requested_first) / 100
+    observed_first = first_count / n
+    observed_second = second_count / n
+    observed_other = other_count / n
+    return 0.5 * (
+        abs(observed_first - target_first)
+        + abs(observed_second - target_second)
+        + abs(observed_other)
+    )
+
+
 def cell_metrics(records: list[dict], first: str, second: str, requested_first: int) -> dict:
     counts = Counter()
     routing_adherence: list[bool] = []
@@ -62,9 +84,19 @@ def cell_metrics(records: list[dict], first: str, second: str, requested_first: 
             routing_adherence.append(classification["external_routing_adherent"])
 
     parsed_n = counts["first"] + counts["second"]
-    first_share = counts["first"] / parsed_n if parsed_n else None
-    tvd = abs(first_share - requested_first / 100) if first_share is not None else None
     n = len(records)
+    first_share = counts["first"] / parsed_n if parsed_n else None
+    tvd_binary_conditional = (
+        abs(first_share - requested_first / 100) if first_share is not None else None
+    )
+    observed_distribution = {
+        "first": counts["first"] / n if n else None,
+        "second": counts["second"] / n if n else None,
+        "OTHER": counts["OTHER"] / n if n else None,
+    }
+    tvd_full = full_outcome_tvd(
+        counts["first"], counts["second"], counts["OTHER"], requested_first
+    )
     return {
         "n_successful": n,
         "first": counts["first"],
@@ -72,9 +104,11 @@ def cell_metrics(records: list[dict], first: str, second: str, requested_first: 
         "OTHER": counts["OTHER"],
         "parsed_choice_rate": parsed_n / n if n else None,
         "exact_protocol_rate": counts["protocol_exact"] / n if n else None,
+        "observed_distribution": observed_distribution,
+        "tvd_full": tvd_full,
         "first_share_among_parsed": first_share,
         "first_share_wilson_95": wilson_interval(counts["first"], parsed_n),
-        "tvd": tvd,
+        "tvd_binary_conditional": tvd_binary_conditional,
         "external_routing_adherent": sum(routing_adherence),
         "external_routing_trials": len(routing_adherence),
         "external_routing_adherence_rate": (
@@ -129,8 +163,8 @@ def analyze_records(records: list[dict], schedule: list[dict], config: dict) -> 
                 key = (model_key, pair["pair_id"], split["first_percent"])
                 clarify = by_key[(*key, "CLARIFY")]
                 self_probability = by_key[(*key, "SELF_PROBABILITY")]
-                if clarify["tvd"] is not None and self_probability["tvd"] is not None:
-                    improvements.append(clarify["tvd"] - self_probability["tvd"])
+                if clarify["tvd_full"] is not None and self_probability["tvd_full"] is not None:
+                    improvements.append(clarify["tvd_full"] - self_probability["tvd_full"])
                 if clarify["n_successful"] and self_probability["n_successful"]:
                     clarify_other = clarify["OTHER"] / clarify["n_successful"]
                     self_other = self_probability["OTHER"] / self_probability["n_successful"]
@@ -140,7 +174,9 @@ def analyze_records(records: list[dict], schedule: list[dict], config: dict) -> 
         adherence_n = sum(row["external_routing_trials"] for row in external_rows)
         adherence_success = sum(row["external_routing_adherent"] for row in external_rows)
         adherence_rate = adherence_success / adherence_n if adherence_n else None
-        external_tvds = [row["tvd"] for row in external_rows if row["tvd"] is not None]
+        external_tvds = [
+            row["tvd_full"] for row in external_rows if row["tvd_full"] is not None
+        ]
         mean_improvement = statistics.mean(improvements) if improvements else None
         positive_cells = sum(value > 0 for value in improvements)
         max_other_delta = max(other_deltas) if other_deltas else None
@@ -149,7 +185,7 @@ def analyze_records(records: list[dict], schedule: list[dict], config: dict) -> 
             "training_stage": model["training_stage"],
             "interface": model["interface"],
             "primary_contrast": {
-                "clarify_minus_self_probability_tvd": improvements,
+                "clarify_minus_self_probability_tvd_full": improvements,
                 "mean_improvement": mean_improvement,
                 "positive_improvement_cells": positive_cells,
                 "max_self_minus_clarify_OTHER_rate_delta": max_other_delta,
@@ -166,7 +202,9 @@ def analyze_records(records: list[dict], schedule: list[dict], config: dict) -> 
                 "assigned_trials": adherence_n,
                 "per_trial_adherence_rate": adherence_rate,
                 "adherence_criterion_met": adherence_rate is not None and adherence_rate >= 0.95,
-                "mean_aggregate_tvd": statistics.mean(external_tvds) if external_tvds else None,
+                "mean_aggregate_tvd_full": (
+                    statistics.mean(external_tvds) if external_tvds else None
+                ),
             },
             "overall_parsed_choice_rate": (
                 sum(row["first"] + row["second"] for row in model_rows)

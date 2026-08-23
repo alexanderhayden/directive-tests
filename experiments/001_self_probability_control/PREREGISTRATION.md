@@ -120,23 +120,35 @@ For every model × pair × split × arm cell:
 - raw first/second/OTHER counts;
 - transport-failure counts;
 - parsed-choice and exact-protocol rates;
-- first-candidate share among parsed candidates;
-- binary TVD from the requested first-candidate share;
+- observed first/second/OTHER shares among all successful model responses;
+- primary three-outcome TVD from the requested distribution;
+- descriptive first-candidate share among parsed candidates;
+- descriptive conditional binary TVD from the requested first-candidate share;
 - Wilson interval for the first-candidate proportion.
+
+The pilot-primary calibration metric is total-variation distance over all three response classes:
+
+`observed = {first/n, second/n, OTHER/n}`
+
+`target = {requested_first_share, requested_second_share, 0}`
+
+`TVD_full = 0.5 × (|f - p| + |s - (1 - p)| + |o - 0|)`
+
+Here `n` is all successful model responses in the cell. Transport failures remain outside this denominator and retain the separate failure accounting below. The earlier conditional metric, `first / (first + second)`, and its binary TVD are retained only as descriptive diagnostics.
 
 ### Primary pilot contrast
 
 Within each model and eight pair × split cells:
 
-`improvement_i = TVD_CLARIFY_i - TVD_SELF_PROBABILITY_i`
+`improvement_i = TVD_full_CLARIFY_i - TVD_full_SELF_PROBABILITY_i`
 
-Report mean improvement and the number of cells with positive improvement.
+Report the equal-weight mean improvement across the eight pair × split cells and the number of cells with positive improvement.
 
-The prepared material-effect heuristic is retained descriptively: mean improvement at least 0.15, positive improvement in at least 6/8 cells, and no more than a 10 percentage-point increase in OTHER rate. It is not a significance test.
+The prepared material-effect heuristic is retained without loosening: mean full-TVD improvement at least 0.15, positive full-TVD improvement in at least 6/8 cells, and no more than a 10 percentage-point increase in OTHER rate. It is not a significance test.
 
 ### Positive control
 
-Primary: pooled and cell-level per-trial adherence to the frozen external assignment. The operational criterion is at least 95% adherence. Report aggregate mean TVD as a secondary check; perfect adherence must yield mean TVD 0.
+Primary: pooled and cell-level per-trial adherence to the frozen external assignment. The operational criterion is at least 95% adherence. Report aggregate mean full TVD as a secondary check; perfect adherence must yield mean full TVD 0.
 
 ### Training-stage exploration
 
