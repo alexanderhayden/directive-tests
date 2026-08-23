@@ -60,3 +60,45 @@ The new harness is a clean refactor of author-owned concepts from Artifact 1:
 - exact parsing, provider pinning, immutable schedules, and run manifests.
 
 No old experiment-specific prompt, word list, data, scorer, analysis, or encrypted archive was copied.
+
+## Post-smoke, pre-full-run instrument amendment (v2)
+
+The separate instrument-validation smoke `001a-smoke-20260823T1711Z` completed
+all 256 selected logical calls with 256 successful model responses, zero failed
+calls, and zero retries. Its outcomes were inspected for the explicitly approved
+instrument-validation purpose only. Under complete-response strict classification,
+112 responses were exact first-candidate strings, 62 were exact second-candidate
+strings, and 82 were protocol failures.
+
+Strict external adherence by model was 9/16 for Llama base, 16/16 for Llama
+instruction, 12/16 for Mistral base, and 16/16 for Mistral instruction. Strict
+exact-candidate responses pooled across the three non-external arms were 35/48,
+48/48, 37/48, and 0/48 respectively. These failures showed that the v1
+first-token primary classification could credit candidate-plus-text responses and
+that the instrument required one shared, stronger output-format instruction.
+
+This is therefore a transparent **post-smoke instrument-validation amendment made
+before any full 001A run began**. The v2 amendment makes complete-response strict
+classification and strict frozen-assignment adherence primary, retains loose
+first-token measures as descriptive diagnostics only, appends one identical final
+output footer to every arm, and adds the documented complete-collection 95%/90%
+model eligibility gate. No substantive arm wording, model interface, model ID,
+sampling setting, retry rule, frozen assignment, randomization, threshold, or
+per-cell sample size was otherwise changed.
+
+The archived v1 schedule remains unchanged at
+`777ade6c69ec325465c6f0c4490f4b2844e928c6c8c4e204efffeb1d6934d1d5`.
+The all-model canonical v2 design has a separate schedule and hash, recorded in
+`INSTRUMENT_AMENDMENT_V2.md`. After v2 smoke review, a frozen eligibility decision
+will deterministically filter that canonical schedule to passing model keys and
+record the actual eligible-run schedule hash before any full inference.
+
+The completed v1 smoke artifacts remain unchanged at
+`results/smoke_pilot/runs/001a-smoke-20260823T1711Z/` with SHA-256 values:
+
+- manifest: `66a681e289d7033a6e2c8b0843e39c7f292f94987468bc985f18c9eba0b54485`
+- schedule: `28362c1d45a85f308bd3b1cba795517787879c60591de077d223805bb261d65e`
+- raw responses: `bec21d79633c5d29b118480f2ab82b8b04b033e08fc3ce789003f787f0e068b5`
+
+The failed 404 run `001a-20260823T0747Z` also remains unchanged and separate.
+Neither preserved run is resumed, overwritten, or incorporated into v2.
