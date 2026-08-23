@@ -28,7 +28,7 @@ class OllamaProviderTests(unittest.TestCase):
     }
 
     def test_base_uses_native_raw_generate_with_literal_prompt(self):
-        provider = OllamaProvider()
+        provider = OllamaProvider(base_url="http://ollama-host:11434/")
         body = {
             "model": "base-model", "created_at": "2026-08-22T12:34:56Z",
             "response": "KEMAR", "done": True, "done_reason": "stop",
@@ -43,8 +43,8 @@ class OllamaProviderTests(unittest.TestCase):
             )
         url = request.call_args.args[0]
         sent = request.call_args.kwargs["body"]
-        self.assertTrue(url.endswith("/api/generate"))
-        self.assertFalse(url.endswith("/v1/completions"))
+        self.assertEqual(url, "http://ollama-host:11434/api/generate")
+        self.assertNotIn("/v1/", url)
         self.assertEqual(sent["prompt"], "raw transcript")
         self.assertIs(sent["raw"], True)
         self.assertIs(sent["stream"], False)
@@ -72,7 +72,7 @@ class OllamaProviderTests(unittest.TestCase):
         self.assertEqual(result.sent_parameters, sent)
 
     def test_instruction_model_uses_native_chat_with_unchanged_messages(self):
-        provider = OllamaProvider()
+        provider = OllamaProvider(base_url="http://ollama-host:11434/")
         body = {
             "model": "chat-model", "created_at": "2026-08-22T12:35:56Z",
             "message": {"role": "assistant", "content": "DOVIC"},
@@ -89,8 +89,8 @@ class OllamaProviderTests(unittest.TestCase):
             )
         url = request.call_args.args[0]
         sent = request.call_args.kwargs["body"]
-        self.assertTrue(url.endswith("/api/chat"))
-        self.assertFalse(url.endswith("/v1/chat/completions"))
+        self.assertEqual(url, "http://ollama-host:11434/api/chat")
+        self.assertNotIn("/v1/", url)
         self.assertEqual(sent["messages"], messages)
         self.assertIs(sent["stream"], False)
         self.assertEqual(sent["options"], self.EXPECTED_OPTIONS)
@@ -103,6 +103,21 @@ class OllamaProviderTests(unittest.TestCase):
         self.assertEqual(result.provider_timestamp, "2026-08-22T12:35:56Z")
         self.assertEqual(result.usage["total_tokens"], 90)
         self.assertEqual(result.sent_parameters, sent)
+
+    def test_inventory_uses_exact_native_tags_url(self):
+        provider = OllamaProvider(base_url="http://ollama-host:11434/")
+        with patch(
+            "harness.providers.ollama._json_request",
+            return_value={"models": []},
+        ) as request:
+            self.assertEqual(provider.list_models(), [])
+
+        self.assertEqual(request.call_args.args[0], "http://ollama-host:11434/api/tags")
+        self.assertEqual(request.call_args.kwargs, {
+            "method": "GET",
+            "body": None,
+            "timeout": 30,
+        })
 
 
 if __name__ == "__main__":

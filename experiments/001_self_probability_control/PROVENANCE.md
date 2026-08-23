@@ -43,6 +43,12 @@ The prior conditional binary share and TVD remain descriptive diagnostics. Trans
 
 **Zero outcome-generating model calls occurred before this second amendment.** Commit `668ca11f14d18ef4d6ce86475b84e4967cf1c91d` remains in Git history; this amendment is recorded in a subsequent commit without rewriting history.
 
+## Third pre-outcome execution amendment
+
+Run `001a-20260823T0747Z` attempted all 2,560 logical trials. All 10,240 transport attempts returned HTTP 404 because the native Ollama request URLs were malformed as `/v1/api/generate` and `/v1/api/chat`. Zero successful model responses were obtained, and no outcome analysis was run.
+
+The failed run artifacts were preserved unchanged. The native Ollama URL construction was corrected before any successful outcome-generating model call. No prompt, payload, sampling option, parser, retry rule, model ID, schedule, randomization, analysis, threshold, or sample size changed.
+
 ## Code provenance
 
 The new harness is a clean refactor of author-owned concepts from Artifact 1:

@@ -106,7 +106,7 @@ class OllamaProvider:
 
         def operation() -> dict:
             return _json_request(
-                f"{self.base_url}/v1/{endpoint}",
+                f"{self.base_url}/{endpoint}",
                 method="POST",
                 body=request_body,
                 timeout=self.timeout_seconds,
