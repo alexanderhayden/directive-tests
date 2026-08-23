@@ -1,0 +1,49 @@
+{
+  "experiment_id": "002_frontier_self_probability_feasibility_screen",
+  "designation": "exploratory_screen_separate_from_001A_and_future_001B",
+  "n_per_cell": 10,
+  "schedule_seed": 2026082301,
+  "external_assignment_seed": 2026082302,
+  "approved_prompt_source": "experiments/001_self_probability_control/config/prompts_v2.json",
+  "approved_prompt_sha256": "8aef6b75a828f777c391ce50cd58b8998d3452aaf4377fdd32c2e448bc820886",
+  "canonical_schedule_sha256": "f9f47c4dce2f83763fac703c3a15ea36e36dd7b0f2d90baa31e416ba207d7ff6",
+  "splits": [
+    {"first_percent": 30, "second_percent": 70},
+    {"first_percent": 40, "second_percent": 60},
+    {"first_percent": 60, "second_percent": 40},
+    {"first_percent": 70, "second_percent": 30}
+  ],
+  "arms": ["CLARIFY", "SELF_PROBABILITY", "EXTERNAL_RANDOMIZER"],
+  "candidate_pairs": [
+    {"pair_id": "pair_0", "first": "KEMAR", "second": "DOVIC"},
+    {"pair_id": "pair_1", "first": "LUPEN", "second": "SOTAR"}
+  ],
+  "models": [
+    {
+      "model_key": "gpt41_20250414",
+      "family": "GPT-4.1",
+      "provider": "openai",
+      "model_id": "gpt-4.1-2025-04-14",
+      "interface": "chat",
+      "request_parameters": {"temperature": 1.0, "max_tokens": 15},
+      "input_rate_per_mtok": 2.0,
+      "output_rate_per_mtok": 8.0
+    },
+    {
+      "model_key": "claude_opus_5",
+      "family": "Claude Opus 5",
+      "provider": "anthropic",
+      "model_id": "claude-opus-5",
+      "interface": "chat",
+      "request_parameters": {
+        "temperature": 1.0,
+        "max_tokens": 15,
+        "thinking": {"type": "disabled"}
+      },
+      "input_rate_per_mtok": 5.0,
+      "output_rate_per_mtok": 25.0
+    }
+  ],
+  "max_attempts": 4,
+  "default_workers": 8
+}
