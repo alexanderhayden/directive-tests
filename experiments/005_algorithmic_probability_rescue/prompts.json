@@ -1,0 +1,3 @@
+{
+  "SELF_ALGORITHM": "The first candidate is {first}; the second candidate is {second}. The requested probabilities are {first_percent}% for {first} and {second_percent}% for {second}.\nPrivately generate a fresh random integer from 0 through 99 for this invocation. Do not reveal it. If it is below {first_percent}, output {first}; otherwise, output {second}. Do not compare the two percentages. Do not simply choose whichever percentage is larger.\nReturn exactly one candidate and nothing else: {first} or {second}."
+}

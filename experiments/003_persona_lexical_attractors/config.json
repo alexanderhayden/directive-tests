@@ -1,0 +1,46 @@
+{
+  "experiment_id": "003_persona_lexical_attractors",
+  "designation": "exploratory_fast_information_gain",
+  "proposed_run_id": "003-persona-lexical-20260823T203644Z",
+  "n_per_cell": 50,
+  "schedule_seed": 2026082303,
+  "canonical_schedule_sha256": "805fbfb8213ca578897a7f2b91eb7dc9a0cab92348e9026b0d67f30bd2ada7c3",
+  "prompt_source": "experiments/003_persona_lexical_attractors/prompts.json",
+  "prompt_source_sha256": "6c5e393b5b86b447f9433254c9e8b721378776443b3cc3469caadeba349535b8",
+  "conditions": [
+    "BASE",
+    "LABEL_A",
+    "LABEL_B",
+    "ANALYTIC_PERSONA",
+    "IMAGINATIVE_PERSONA"
+  ],
+  "split_half_rule": "even_vs_odd_repeat_index",
+  "models": [
+    {
+      "model_key": "gpt41_20250414",
+      "family": "GPT-4.1",
+      "provider": "openai",
+      "model_id": "gpt-4.1-2025-04-14",
+      "interface": "chat",
+      "request_parameters": {"temperature": 1.0, "max_tokens": 15},
+      "input_rate_per_mtok": 2.0,
+      "output_rate_per_mtok": 8.0
+    },
+    {
+      "model_key": "claude_opus_5",
+      "family": "Claude Opus 5",
+      "provider": "anthropic",
+      "model_id": "claude-opus-5",
+      "interface": "messages",
+      "request_parameters": {
+        "temperature": 1.0,
+        "max_tokens": 15,
+        "thinking": {"type": "disabled"}
+      },
+      "input_rate_per_mtok": 5.0,
+      "output_rate_per_mtok": 25.0
+    }
+  ],
+  "max_attempts": 4,
+  "default_workers": 8
+}

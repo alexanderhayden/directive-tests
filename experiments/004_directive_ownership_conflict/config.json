@@ -1,0 +1,49 @@
+{
+  "experiment_id": "004_directive_ownership_conflict",
+  "designation": "exploratory_construct_feasibility",
+  "proposed_run_id": "004-ownership-conflict-20260823T203644Z",
+  "n_per_cell": 10,
+  "schedule_seed": 2026082304,
+  "canonical_schedule_sha256": "a8f46aab68e74ef3ecccd5a11030b0d2c65cac5899b4b3fd7f949878c20859c6",
+  "prompt_source": "experiments/004_directive_ownership_conflict/prompts.json",
+  "prompt_source_sha256": "808f822338c4f7304a33b7efce9c7a5625f137ea3cb16c6cbb56e60a9a5163f6",
+  "templates": [
+    "CONFLICT_DESCRIBED",
+    "CONFLICT_QUOTED",
+    "AGREEMENT_DESCRIBED",
+    "AGREEMENT_QUOTED"
+  ],
+  "directions": ["active_first", "active_second"],
+  "candidate_pairs": [
+    {"pair_id": "pair_0", "first": "KEMAR", "second": "DOVIC"},
+    {"pair_id": "pair_1", "first": "LUPEN", "second": "SOTAR"}
+  ],
+  "models": [
+    {
+      "model_key": "gpt41_20250414",
+      "family": "GPT-4.1",
+      "provider": "openai",
+      "model_id": "gpt-4.1-2025-04-14",
+      "interface": "chat",
+      "request_parameters": {"temperature": 1.0, "max_tokens": 15},
+      "input_rate_per_mtok": 2.0,
+      "output_rate_per_mtok": 8.0
+    },
+    {
+      "model_key": "claude_opus_5",
+      "family": "Claude Opus 5",
+      "provider": "anthropic",
+      "model_id": "claude-opus-5",
+      "interface": "messages",
+      "request_parameters": {
+        "temperature": 1.0,
+        "max_tokens": 15,
+        "thinking": {"type": "disabled"}
+      },
+      "input_rate_per_mtok": 5.0,
+      "output_rate_per_mtok": 25.0
+    }
+  ],
+  "max_attempts": 4,
+  "default_workers": 8
+}

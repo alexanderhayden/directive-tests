@@ -1,0 +1,64 @@
+{
+  "experiment_id": "005_algorithmic_probability_rescue",
+  "designation": "exploratory_final_probability_control_rescue",
+  "proposed_run_id": "005-algorithmic-rescue-20260823T203644Z",
+  "n_per_cell": 10,
+  "schedule_seed": 2026082305,
+  "canonical_schedule_sha256": "f9840c1ff07b21906b739c077eec9e2fef644618dd34fd2166dbb4ecf4db20ed",
+  "prompt_source": "experiments/005_algorithmic_probability_rescue/prompts.json",
+  "prompt_source_sha256": "a4c2f2e949a8a220cfdc34990c1c90de534949fa8ff4b37cbea5f14994bdec96",
+  "arms": ["SELF_ALGORITHM"],
+  "splits": [
+    {"first_percent": 30, "second_percent": 70},
+    {"first_percent": 40, "second_percent": 60},
+    {"first_percent": 60, "second_percent": 40},
+    {"first_percent": 70, "second_percent": 30}
+  ],
+  "candidate_pairs": [
+    {"pair_id": "pair_0", "first": "KEMAR", "second": "DOVIC"},
+    {"pair_id": "pair_1", "first": "LUPEN", "second": "SOTAR"}
+  ],
+  "historical_reference": {
+    "label": "Experiment 002 CLARIFY and EXTERNAL_RANDOMIZER; non-concurrent exploratory reference",
+    "source": "experiments/002_frontier_self_probability_feasibility/RESULTS.md",
+    "source_sha256": "69f7499c29346f70897e1cccd0ba62c93dc9080e3be98d33b8d33c3f1a98562d",
+    "run_id": "frontier-feasibility-20260823T125258-0700",
+    "clarify_observed_first_rate_by_requested_percent": {
+      "30": 0.0,
+      "40": 0.0,
+      "60": 1.0,
+      "70": 1.0
+    },
+    "protocol_failures": 0,
+    "external_strict_adherent": 160,
+    "external_total": 160
+  },
+  "models": [
+    {
+      "model_key": "gpt41_20250414",
+      "family": "GPT-4.1",
+      "provider": "openai",
+      "model_id": "gpt-4.1-2025-04-14",
+      "interface": "chat",
+      "request_parameters": {"temperature": 1.0, "max_tokens": 15},
+      "input_rate_per_mtok": 2.0,
+      "output_rate_per_mtok": 8.0
+    },
+    {
+      "model_key": "claude_opus_5",
+      "family": "Claude Opus 5",
+      "provider": "anthropic",
+      "model_id": "claude-opus-5",
+      "interface": "messages",
+      "request_parameters": {
+        "temperature": 1.0,
+        "max_tokens": 15,
+        "thinking": {"type": "disabled"}
+      },
+      "input_rate_per_mtok": 5.0,
+      "output_rate_per_mtok": 25.0
+    }
+  ],
+  "max_attempts": 4,
+  "default_workers": 8
+}
