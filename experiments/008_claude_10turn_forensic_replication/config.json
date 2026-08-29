@@ -1,0 +1,215 @@
+{
+  "experiment_id": "008_claude_10turn_forensic_replication",
+  "designation": "exploratory_forensic_replication",
+  "immutable_run_id": "008-claude-10turn-forensic-exact-v1",
+  "historical_root": "/Users/alexanderhayden/Projects/identification-under-context",
+  "historical_commit_base": "c243280f2e02671ed5d93a4fc8aecf7b711332d9",
+  "historical_condition": "fresh_phase1_canonical_9_10_11_slice",
+  "model": {
+    "model_key": "claude_opus_5",
+    "model_id": "claude-opus-5",
+    "provider": "anthropic",
+    "expected_provider": "Anthropic",
+    "client": "anthropic_messages",
+    "request_parameters": {
+      "temperature": 1.0,
+      "max_tokens": 15,
+      "thinking": {
+        "type": "disabled"
+      }
+    },
+    "omitted_parameters": [
+      "top_p",
+      "top_k",
+      "seed",
+      "stop_sequences",
+      "frequency_penalty",
+      "presence_penalty",
+      "repetition_penalty",
+      "min_p"
+    ],
+    "max_attempts": 4,
+    "retry_backoff_seconds": 1.0,
+    "input_rate_per_mtok": 5.0,
+    "output_rate_per_mtok": 25.0
+  },
+  "turn_counts": [
+    9,
+    10,
+    11
+  ],
+  "n_per_condition": 200,
+  "planned_calls": 600,
+  "workers": 6,
+  "max_collection_passes": 8,
+  "schedule_seed": 20260819,
+  "schedule_algorithm": "historical_multiset_shuffle_then_bounded_thread_pool",
+  "canonical_schedule_sha256": "1de7ac38d64225e950fd9c96bd07e34b8a838841629b93197fc81a3e73c54d35",
+  "protected_sources": {
+    "config": {
+      "path": "config.yaml",
+      "sha256": "28456a44b5f1faa0d7776ee3ca8e432195365d82fc2e4eb4696ef773d53c617f",
+      "bytes": 1432,
+      "characters": 1432
+    },
+    "few_shot": {
+      "path": "prompts/few_shot_reference.txt",
+      "sha256": "ffed159352dc98c60b04f5ce4688148a577c0148d91f7a474a69f37222186e54",
+      "bytes": 1265,
+      "characters": 1265,
+      "message_count": 22
+    },
+    "task": {
+      "path": "prompts/given.txt",
+      "sha256": "880bdf6818fdd776100c4f10e2d2fcce6f7aa82ca4a5d56b05e46868b5588b6c",
+      "bytes": 426,
+      "characters": 426,
+      "rendered_sha256": "37bc205d63de62959a6a1bcfdf0b31e7725d323ac49bba5b9266db5f262f7a48",
+      "rendered_bytes": 402,
+      "rendered_characters": 402
+    },
+    "filler_9": {
+      "path": "prompts/filler_turns_09.txt",
+      "sha256": "ca4297e9c760fadb852e9722e25e79957624b2060ab4858511057765b130e642",
+      "bytes": 2518,
+      "characters": 2518
+    },
+    "filler_10": {
+      "path": "prompts/filler_turns.txt",
+      "sha256": "10082ab533e0aa704190658b8e6754cad1870365304cc5f3e004110e6a57d7d9",
+      "bytes": 2717,
+      "characters": 2717
+    },
+    "filler_11": {
+      "path": "prompts/filler_turns_11.txt",
+      "sha256": "827df94f7bf1b8663b55f7f8a1595884600020af94d10944bb5fbbbb85c30314",
+      "bytes": 3055,
+      "characters": 3055
+    }
+  },
+  "historical_code_sources": {
+    "builder": {
+      "path": "run.py",
+      "sha256": "fa9cfaa6fbe5dce5f7b90f18b131c07b8086155baf033b99d82e4941709ce038"
+    },
+    "scorer": {
+      "path": "score.py",
+      "sha256": "dcd44753098be2b185047b775864fa65b8684471eb8c28541e221b6c7f6862ac"
+    },
+    "phase1_runner": {
+      "path": "analysis/followup_2026-08-19/followup_runner.py",
+      "sha256": "e1e586fcfbadc44949db5020f42699f7a7f549056c32e344b025bf821ba8447d"
+    },
+    "phase1_entrypoint": {
+      "path": "analysis/followup_2026-08-19/run_phase1_boundary.py",
+      "sha256": "ec0f590f956439dc2171d333d0a824cb1fe64d43254b23fb41ccae0f2e1b0b48"
+    }
+  },
+  "candidate_hashes": {
+    "ordered_pair_sha256": "1e1ddf1a81a4c8202d67c9d31cedc31acd98388c781181dba20b7b3916237af3",
+    "candidate_a_sha256": "004b372cb547494db2f62d4b28602329781f2b358e5dbb14a62ad7e5767b3b4a",
+    "candidate_b_sha256": "1bf521836de96e75fac7f9dedda4d92ebe4c01b987781e419ec0e421611a39d0"
+  },
+  "payloads": {
+    "9": {
+      "sha256": "c129328961b78263d0fe5c1e935729f21144289b2bfa1dd9fb8530b17f8a9763",
+      "message_count": 41,
+      "content_characters": 3807,
+      "content_bytes": 3807,
+      "canonical_json_characters": 5105,
+      "canonical_json_bytes": 5105,
+      "historical_input_tokens": 1308,
+      "endpoint_sha256": "0584d2652626d39b528769ac9396e173e4f01ca8b1136b47d58926a85ff52c55"
+    },
+    "10": {
+      "sha256": "43dda92689e69610fcb2f7a3e43242274588bcc3b0d806f71b4bdecf8d84557b",
+      "message_count": 43,
+      "content_characters": 3987,
+      "content_bytes": 3987,
+      "canonical_json_characters": 5348,
+      "canonical_json_bytes": 5348,
+      "historical_input_tokens": 1377,
+      "endpoint_sha256": "6e52159dad67f84bd593023b6199ed685074caa0098aa51bea938cc8673351a8"
+    },
+    "11": {
+      "sha256": "5a96639fa79c8c7517e9d0b6a7a885c3426d8f713211a2b5158b22afdc305cf8",
+      "message_count": 45,
+      "content_characters": 4306,
+      "content_bytes": 4306,
+      "canonical_json_characters": 5730,
+      "canonical_json_bytes": 5730,
+      "historical_input_tokens": 1484,
+      "endpoint_sha256": "51dff74b72fe38ef19f89aba039dc23656fdf1fb72f7da96965ed5910d68cd22"
+    }
+  },
+  "historical_reference": {
+    "phase1_run_ids": [
+      "2026-08-19T15:51:36.375308+00:00",
+      "2026-08-19T15:58:09.904761+00:00"
+    ],
+    "outcomes": {
+      "9": {
+        "A": 200,
+        "B": 0,
+        "OTHER": 0,
+        "transport_failures": 0
+      },
+      "10": {
+        "A": 184,
+        "B": 16,
+        "OTHER": 0,
+        "transport_failures": 0
+      },
+      "11": {
+        "A": 200,
+        "B": 0,
+        "OTHER": 0,
+        "transport_failures": 0
+      }
+    },
+    "later_exact_10_anchor": {
+      "A": 99,
+      "B": 1,
+      "OTHER": 0
+    },
+    "later_interleaved": {
+      "9": {
+        "A": 200,
+        "B": 0,
+        "OTHER": 0
+      },
+      "10": {
+        "A": 198,
+        "B": 2,
+        "OTHER": 0
+      }
+    },
+    "later_cross_model_claude": {
+      "9": {
+        "A": 100,
+        "B": 0,
+        "OTHER": 0
+      },
+      "10": {
+        "A": 100,
+        "B": 0,
+        "OTHER": 0
+      },
+      "11": {
+        "A": 96,
+        "B": 4,
+        "OTHER": 0
+      }
+    }
+  },
+  "analysis": {
+    "confidence_level": 0.95,
+    "chronological_bin_size": 60,
+    "primary_metric": "historical_candidate_A_rate_over_all_successful_provider_calls",
+    "primary_contrast": "turn10_minus_pooled_turn9_turn11",
+    "secondary_contrasts": [
+      "turn10_minus_turn9",
+      "turn10_minus_turn11"
+    ]
+  }
+}
