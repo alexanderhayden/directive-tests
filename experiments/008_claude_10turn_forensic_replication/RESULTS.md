@@ -2,7 +2,7 @@
 
 ## Design
 
-Experiment 008 tested whether the historical Claude 10-turn anomaly would recur under an exact reconstruction of the observable historical setup. It used Claude Opus 5 and the exact reconstructed historical 9-, 10-, and 11-turn payloads, with 200 separate calls per condition and 600 calls total.
+Experiment 008 tested whether the historical Claude 10-turn anomaly would recur under a high-fidelity reconstruction of the observable historical setup. It used Claude Opus 5 and the reconstructed historical 9-, 10-, and 11-turn payloads, with 200 separate calls per condition and 600 calls total.
 
 The replication preserved the historical prompt/context bytes, candidate assignment, endpoint, request settings, scorer, and turn construction. Protected historical material was loaded from its original read-only source and is identified in the experiment provenance by source path and SHA-256 rather than reproduced here.
 
@@ -39,9 +39,9 @@ The frozen secondary contrasts were:
 | Historical anomalous batch | 200/200 | 184/200 | 200/200 |
 | Experiment 008 | 200/200 | 200/200 | 191/200 |
 
-The historical localized Claude 10-turn degradation did not reproduce under an exact later reconstruction despite matching the observable prompt bytes, candidate assignment, scorer, request settings, and nominal model/API configuration. The exact historical prompt/context bytes, candidate assignment, endpoint, request settings, scorer, and turn construction were insufficient to reproduce the old effect under current serving conditions.
+The historical localized Claude 10-turn degradation did not reproduce under a later high-fidelity reconstruction of the observable setup despite matching the observable prompt bytes, candidate assignment, scorer, request settings, and nominal model/API configuration. These matched observable elements were insufficient to reproduce the old effect in Experiment 008.
 
-Possible unresolved explanations include serving-time nonstationarity, hidden backend or model-state differences behind the same public model ID, batch-local effects, and ordinary stochastic variation. The 11-turn dip is a post hoc exploratory observation and is not promoted into a new hypothesis.
+Possible unresolved explanations include serving-time nonstationarity, hidden backend differences, batch effects, and ordinary stochastic variation. The 11-turn dip is a post hoc exploratory observation and is not promoted into a new hypothesis.
 
 The general stability lesson is that structured behavioral effects should be checked for independent and, where practical, temporally separated replication before being interpreted as stable model properties.
 

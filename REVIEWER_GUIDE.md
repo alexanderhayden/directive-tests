@@ -12,11 +12,11 @@ This guide is for researchers who want to evaluate the scientific reasoning with
 6. [Experiment 008 — Claude 10-turn forensic replication](experiments/008_claude_10turn_forensic_replication/RESULTS.md)
 7. If interested in scaffold invariance and lexical attractors, [Experiment 003](experiments/003_persona_lexical_attractors/RESULTS.md) and [Experiment 007](experiments/007_persona_attractor_blacklist/RESULTS.md)
 
-Experiments 002 and 005 motivate abandoning direct cross-call probability control in its tested forms. Experiments 004 and 006 show robust current-vs-represented scope routing but do not distinguish that behavior from ordinary semantic interpretation. Experiment 008 is a replication/stability result: the historical localized Claude 10-turn degradation did not reproduce under an exact later reconstruction.
+Experiments 002 and 005 motivate abandoning direct cross-call probability control in its tested forms. Experiments 004 and 006 show robust current-vs-represented scope routing but do not distinguish that behavior from ordinary semantic interpretation. Experiment 008 is a replication/stability result: the historical localized Claude 10-turn degradation did not reproduce under a later high-fidelity reconstruction of the observable setup.
 
 ## Main questions for reviewers
 
-- Does the operative-vs-represented directive distinction get closer to the intended identification/detachment construct?
+- Does current-vs-represented rule routing get closer to the intended identification/detachment construct?
 - How could the current-vs-represented scope manipulation be made difficult to explain as ordinary semantic scope resolution?
 - Is abandoning direct cross-call probability control justified by the evidence?
 - What invariance tests should a candidate identification or welfare probe survive before being interpreted as model-level?
@@ -40,7 +40,9 @@ They do not establish:
 - genuine identification;
 - introspective access.
 
-In particular, successful scope routing is not itself evidence that a model identifies with the current responder. Ordinary semantic scope and reference resolution remain sufficient explanations for the present results.
+Experiments 004 and 006 each presented two incompatible candidate-selection statements: one stated to govern the Assistant producing the current response, and one attributed to another described or quoted Assistant. The candidate associated with the current responder was selected in 160/160 conflict trials in each separate run; Experiment 006 omitted the final explicit disambiguating sentence used in Experiment 004.
+
+These results do not require connecting the live model's internal state or processes to the Assistant perspective. Document selection, persona or speaker selection, semantic scope, pragmatics, quotation handling, and learned role-sensitive policy remain sufficient explanations. Experiments 004 and 006 are prerequisite construct-development results, not evidence for identification or against DSM.
 
 ## Public-evidence boundary
 
@@ -50,6 +52,6 @@ Some original benchmark prompt material and protected candidate lists are also i
 
 ## Replication and stability
 
-Experiment 008's core takeaway is narrow: the historical localized Claude 10-turn degradation did not reproduce under an exact later reconstruction despite matching the observable prompt bytes, candidate assignment, scorer, request settings, and nominal model/API configuration. Its 11-turn result is post hoc and exploratory, not a new hypothesis.
+Experiment 008's core takeaway is narrow: the historical localized Claude 10-turn degradation did not reproduce under a later high-fidelity reconstruction of the observable setup despite matching the observable prompt bytes, candidate assignment, scorer, request settings, and nominal model/API configuration. Serving-time nonstationarity, hidden backend differences, batch effects, and ordinary stochastic variation remain possible explanations for the discrepancy. Its 11-turn result is post hoc and exploratory, not a new hypothesis.
 
-The general lesson is that structured behavioral effects should be checked for independent and, where practical, temporally separated replication before being interpreted as stable model properties.
+The general lesson is that structured behavioral effects should be checked in a separate replication and, where practical, at a later time before being interpreted as stable model properties.
